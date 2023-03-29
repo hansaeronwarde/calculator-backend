@@ -6,12 +6,11 @@ export const insertUser = async (req, res) => {
 
   const uuid = v4();
   if (os !== "android" && os !== "ios") {
-    return res.status(400).send({ error: "Invalid os value" });
+    return res.status(400).send({ error: "Invalid parameter" });
   }
-  console.log(uuid, os);
   try {
     const result = await pool.query(
-      `INSERT INTO public."user" (uuid, os) VALUES ($1 $2)`,
+      `INSERT INTO public.user(uuid, os) VALUES ($1, $2)`,
       [uuid, os]
     );
     return res.status(201).send({
@@ -20,6 +19,7 @@ export const insertUser = async (req, res) => {
       },
     });
   } catch (err) {
-    return res.status(400).send({ error: err });
+    console.log(err);
+    return res.status(500).send({ error: err.error });
   }
 };
